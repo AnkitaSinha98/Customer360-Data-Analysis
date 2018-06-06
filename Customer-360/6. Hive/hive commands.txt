@@ -1,0 +1,34 @@
+
+create database customer360_sagarnildass;
+use customer360_sagarnildass;
+-- accounts dept- all details
+
+create external table if not exists accountsdept(id int, registrationdate date, age int, gender string, occupation string, income int, savingsid string, avgbalance int, loanid string, loantype string, santionedamount int, loantenure int, cardnumber string, credittype string, amountlimit int, deposittype string, deposittenure int)
+stored by'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES("hbase.columns.mapping" = ":key, demographics:registrationdate, demographics:age, demographics:gender, demographics:occupation, demographics:income, savings:savingsid, savings:avgbalance, loan:loanid, loan:type, loan:santionedamount, loan:tenure, credit:cardnumber, credit:type, credit:amountlimit, deposit:type, deposit:tenure")
+TBLPROPERTIES("hbase.table.name"="customer360_sagarnildass");
+
+--reception - demographics,saving id, loan, credit id, deposit
+
+create external table reception(id string, registrationdate date, age int, gender string, occupation string, income int, savingsid string, loanid string, cardnumber string, deposittype string)
+stored by'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES("hbase.columns.mapping" = ":key, demographics:registrationdate, demographics:age, demographics:gender, demographics:occupation, demographics:income, savings:savingsid, loan:loanid, credit:cardnumber, deposit:type")
+TBLPROPERTIES("hbase.table.name"="customer360_sagarnildass");
+
+select count(*) from reception where deposittype is not null;
+
+
+--finance-  each id, amount data, 
+
+create external table finance(id int, savingsid string, loanid string, cardnumber string, type string, income int, avgbalance int, santionedamount int, amountlimit int)
+stored by'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES("hbase.columns.mapping" = ":key, savings:savingsid, loan:loanid, credit:cardnumber, deposit:type, demographics:income, savings:avgbalance, loan:santionedamount, credit:amountlimit")
+TBLPROPERTIES("hbase.table.name"="customer360_sagarnildass");
+
+--loan dept- savings table, loan table
+
+create external table if not exists loandept(id int, savingsid string, avgbalance int, loanid string, type string, santionedamount int, tenure int)
+stored by'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES("hbase.columns.mapping" = ":key, savings:savingsid, savings:avgbalance, loan:loanid, loan:type, loan:santionedamount, loan:tenure")
+TBLPROPERTIES("hbase.table.name"="customer360_sagarnildass");
+

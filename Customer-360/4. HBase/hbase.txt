@@ -1,0 +1,16 @@
+Login to HBase Shell
+
+..............HBASE..............
+
+create 'customer360', 'demographics', 'savings', 'loan', 'credit', 'deposit', 'credittrxsummary'
+
+list 'customer.*'
+
+describe 'customer360'
+
+
+
+
+
+
+
